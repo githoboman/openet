@@ -1,12 +1,12 @@
 import React from 'react';
-import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KPICardProps {
   label: string;
   value: string | number;
   delta?: string;
   isPositive?: boolean;
-  icon?: LucideIcon;
+  icon?: React.ComponentType<{ className?: string }>;
   subtext?: string;
   highlight?: 'cyan' | 'green' | 'violet' | 'none';
 }

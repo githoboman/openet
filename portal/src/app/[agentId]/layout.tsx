@@ -79,7 +79,7 @@ export default function AgentLayout({ params, children }: AgentLayoutProps) {
         className="sticky top-16 z-30 flex gap-2 overflow-x-auto border-b border-outline-variant/40 bg-background/95 pb-px backdrop-blur scrollbar-none"
         aria-label="Agent Portal Tabs"
       >
-        {tabs.map((tab) => {
+        {navItems.map((tab) => {
           const href = `${base}/${tab.slug}`;
           const active = pathname === href || pathname.startsWith(`${href}/`);
           const Icon = tab.icon;

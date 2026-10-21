@@ -227,7 +227,7 @@ sync_settlement(
                                 {isCopied ? <Check className="h-3 w-3 text-secondary" /> : <Copy className="h-3 w-3" />}
                               </button>
                               {(() => {
-                                const isEvm = tx.transaction_hash?.startsWith('0x') || (tx.network && tx.network.includes('bot'));
+                                const isEvm = tx.transaction_hash?.startsWith('0x');
                                 const txUrl = isEvm ? `https://scan.bohr.life/tx/${tx.transaction_hash}` : `https://testnet.xrpl.org/transactions/${tx.transaction_hash}`;
                                 return (
                                   <a

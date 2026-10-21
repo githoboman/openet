@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
 import {
   BOTCHAIN_TESTNET,
   BOTCHAIN_MAINNET,
@@ -346,169 +345,14 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
 }
 
 /**
- * Privy Provider Integration (Active when NEXT_PUBLIC_PRIVY_APP_ID is configured)
+ * Universal Portal Auth Provider (Injected EVM wallet on BOT Chain)
  */
-function PrivyPortalAuthProvider({ children }: { children: React.ReactNode }) {
-  const { ready: privyReady, authenticated: privyAuth, user, login: privyLogin, logout: privyLogout, getAccessToken } = usePrivy();
-  const { wallets } = useWallets();
-  const [balanceWei, setBalanceWei] = useState<string | null>(null);
-  const [chainId, setChainId] = useState<number | null>(null);
-
-  const wallet = user?.linkedAccounts.find((account) => account.type === 'wallet' && account.chainType === 'ethereum');
-  const walletAddress = wallet && 'address' in wallet ? (wallet.address as string) : null;
-
-  const refreshBalance = useCallback(async () => {
-    if (!walletAddress) {
-      setBalanceWei(null);
-      return;
-    }
-    const rawBalance = await fetchBotNativeBalance(walletAddress, BOTCHAIN_TESTNET.rpcUrl);
-    if (rawBalance) {
-      setBalanceWei(rawBalance);
-    }
-  }, [walletAddress]);
-
-  useEffect(() => {
-    if (walletAddress) {
-      void refreshBalance();
-      const connected = wallets.find((item) => item.address.toLowerCase() === walletAddress.toLowerCase());
-      if (connected) {
-        connected.getEthereumProvider().then(async (provider) => {
-          try {
-            const hexChain = await provider.request({ method: 'eth_chainId' }) as string;
-            setChainId(parseInt(hexChain, 16));
-          } catch {}
-        }).catch(() => {});
-      }
-    } else {
-      setBalanceWei(null);
-      setChainId(null);
-    }
-  }, [walletAddress, wallets, refreshBalance]);
-
-  const switchNetwork = async (targetChainId: number): Promise<boolean> => {
-    const connected = wallets.find((item) => item.address.toLowerCase() === walletAddress?.toLowerCase());
-    if (!connected) return false;
-    const provider = await connected.getEthereumProvider();
-    const targetHex = `0x${targetChainId.toString(16)}`;
-    try {
-      await provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: targetHex }],
-      });
-      setChainId(targetChainId);
-      return true;
-    } catch (switchError: any) {
-      if (switchError?.code === 4902 || switchError?.data?.originalError?.code === 4902) {
-        const net = getBotChainNetwork(targetChainId);
-        try {
-          await provider.request({
-            method: 'wallet_addEthereumChain',
-            params: [getAddChainParameters(net)],
-          });
-          setChainId(targetChainId);
-          return true;
-        } catch {
-          return false;
-        }
-      }
-      return false;
-    }
-  };
-
-  const switchToBotChainTestnet = async (): Promise<boolean> => {
-    return switchNetwork(BOTCHAIN_TESTNET.chainId);
-  };
-
-  const sendTransaction = async (transaction: { to: string; data: string; value?: string }): Promise<string | null> => {
-    const connected = wallets.find((item) => item.address.toLowerCase() === walletAddress?.toLowerCase());
-    if (!connected) return null;
-    const provider = await connected.getEthereumProvider();
-    await switchToBotChainTestnet();
-    return await provider.request({
-      method: 'eth_sendTransaction',
-      params: [{ from: walletAddress, to: transaction.to, data: transaction.data, value: transaction.value || '0x0' }],
-    }) as string;
-  };
-
-  const waitTransaction = async (transactionHash: string): Promise<boolean> => {
-    const connected = wallets.find((item) => item.address.toLowerCase() === walletAddress?.toLowerCase());
-    if (!connected) return false;
-    const provider = await connected.getEthereumProvider();
-    for (let attempt = 0; attempt < 30; attempt += 1) {
-      const receipt = await provider.request({ method: 'eth_getTransactionReceipt', params: [transactionHash] }) as { status?: string } | null;
-      if (receipt) {
-        void refreshBalance();
-        return receipt.status === '0x1';
-      }
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    }
-    return false;
-  };
-
-  const signTypedData = async (targetChainId: number, typedData: Record<string, unknown>): Promise<string | null> => {
-    const connected = wallets.find((item) => item.address.toLowerCase() === walletAddress?.toLowerCase());
-    if (!connected || !walletAddress) return null;
-    const provider = await connected.getEthereumProvider();
-    await switchNetwork(targetChainId);
-    return await provider.request({
-      method: 'eth_signTypedData_v4',
-      params: [walletAddress, JSON.stringify(typedData)],
-    }) as string;
-  };
-
-  const isBot = chainId !== null && isBotChain(chainId);
-  const isTest = chainId !== null && isBotChainTestnet(chainId);
-  const formattedBalance = balanceWei ? formatBotAmount(balanceWei) : '0';
-  const networkName = chainId
-    ? isBot
-      ? getBotChainNetwork(chainId).name
-      : `Chain ${chainId}`
-    : 'Not Connected';
-
-  return (
-    <PortalAuthContext.Provider
-      value={{
-        enabled: true,
-        ready: privyReady,
-        authenticated: privyAuth && Boolean(walletAddress),
-        walletAddress,
-        chainId,
-        isBotChain: isBot,
-        isTestnet: isTest,
-        balance: formattedBalance,
-        balanceWei,
-        networkName,
-        connectionType: 'privy',
-        login: async () => privyLogin(),
-        logout: privyLogout,
-        switchToBotChainTestnet,
-        switchNetwork,
-        refreshBalance,
-        getAccessToken,
-        sendTransaction,
-        sendBotTransaction: sendTransaction,
-        sendArbitrumTransaction: sendTransaction,
-        waitTransaction,
-        waitArbitrumTransaction: waitTransaction,
-        signTypedData,
-      }}
-    >
-      {children}
-    </PortalAuthContext.Provider>
-  );
-}
-
 export function PortalAuthProvider({
-  usePrivyMode = false,
   children,
 }: {
   usePrivyMode?: boolean;
   children: React.ReactNode;
 }) {
-  if (usePrivyMode) {
-    return <PrivyPortalAuthProvider>{children}</PrivyPortalAuthProvider>;
-  }
   return <InjectedPortalAuthProvider>{children}</InjectedPortalAuthProvider>;
 }
 
