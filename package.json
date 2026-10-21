@@ -1,0 +1,12 @@
+{
+  "name": "openet",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "cd portal && npm run build",
+    "start": "cd portal && npm start"
+  },
+  "dependencies": {
+    "next": "^14.2.35"
+  }
+}
