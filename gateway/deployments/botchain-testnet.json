@@ -1,0 +1,18 @@
+{
+  "network": "Bohr Testnet",
+  "chainId": 968,
+  "deployer": "0x080211c4Db9d3861d8Ab760245E4cA5Ca54aDA4b",
+  "contracts": {
+    "statementCommitmentRegistry": {
+      "address": "0xaD853e558171821372f084C87CEb5fAb4ca32E95",
+      "tx": "0x046bacd23ccdc43e1efc8b2b60c1274da920e4e03329d97a3c4497d59fe71bfc",
+      "explorer": "https://scan.bohr.life/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95"
+    },
+    "receiptAnchor": {
+      "address": "0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE",
+      "tx": "0x56b66ed3b554596ff533be1d301cef2b3fd790ca6d6b772970faefb3d90bc983",
+      "explorer": "https://scan.bohr.life/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE"
+    }
+  },
+  "deployedAt": "2026-10-21T07:21:34.470Z"
+}

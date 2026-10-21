@@ -1,0 +1,27 @@
+agent/.venv/
+agent/.env
+agent/__pycache__/
+agent/**/__pycache__/
+gateway/node_modules/
+gateway/dist/
+gateway/.env
+.openx/
+
+GOOGLE_TECH_STACK_SETUP.md
+.nim/*
+nim.json
+docs/*
+
+portal/.next/*
+portal/node_modules/*
+portal/.env*.local
+.gstack/
+
+# Local/generated workspace artifacts
+.DS_Store
+cache/
+out/
+portal/test-results/
+portal/tsconfig.tsbuildinfo
+gateway/.nim/
+gateway/docs/state/
