@@ -37,10 +37,12 @@ export function HeaderWallet() {
     chainId,
     isBotChain,
     isTestnet,
+    isMainnet,
     balance,
     login,
     logout,
     switchToBotChainTestnet,
+    switchToBotChainMainnet,
     switchNetwork,
     refreshBalance,
   } = usePortalAuth();
@@ -72,6 +74,15 @@ export function HeaderWallet() {
     setSwitchingNetwork(true);
     try {
       await switchToBotChainTestnet();
+    } finally {
+      setSwitchingNetwork(false);
+    }
+  };
+
+  const handleSwitchToMainnet = async () => {
+    setSwitchingNetwork(true);
+    try {
+      await switchToBotChainMainnet();
     } finally {
       setSwitchingNetwork(false);
     }
@@ -135,25 +146,25 @@ export function HeaderWallet() {
           </Link>
 
           {/* Network Pill */}
-          {isTestnet ? (
+          {isMainnet ? (
+            <div className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-bold text-cyan-400">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>BOT Mainnet (677)</span>
+            </div>
+          ) : isTestnet ? (
             <div className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>BOT Testnet (968)</span>
             </div>
-          ) : isBotChain ? (
-            <div className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-bold text-cyan-400">
-              <span className="h-2 w-2 rounded-full bg-cyan-400" />
-              <span>BOT Mainnet</span>
-            </div>
           ) : (
             <button
-              onClick={handleSwitchToTestnet}
+              onClick={handleSwitchToMainnet}
               disabled={switchingNetwork}
               className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[11px] font-bold text-amber-300 hover:bg-amber-500/20 transition"
-              title="Click to switch to BOT Chain Testnet (Chain ID 968)"
+              title="Click to switch to BOT Chain Mainnet (Chain ID 677)"
             >
               <AlertTriangle className="h-3 w-3 animate-bounce" />
-              <span>Switch to BOT Testnet</span>
+              <span>Switch to BOT Mainnet</span>
             </button>
           )}
 
@@ -171,7 +182,7 @@ export function HeaderWallet() {
             className="flex items-center gap-2 rounded-xl border border-agent-accent/30 bg-surface-container-high px-3 py-1.5 hover:bg-surface-container-highest transition shadow-sm"
             title="Account Options"
           >
-            <span className={`h-2 w-2 rounded-full ${isTestnet ? 'bg-secondary' : isBotChain ? 'bg-cyan-400' : 'bg-amber-400'}`} />
+            <span className={`h-2 w-2 rounded-full ${isMainnet ? 'bg-cyan-400' : isTestnet ? 'bg-secondary' : isBotChain ? 'bg-cyan-400' : 'bg-amber-400'}`} />
             <span className="font-mono text-xs font-semibold text-on-surface">
               {displayWallet}
             </span>
@@ -197,7 +208,7 @@ export function HeaderWallet() {
                       {copied ? <Check className="h-4 w-4 text-secondary" /> : <Copy className="h-4 w-4" />}
                     </button>
                     <a
-                      href={getBotExplorerAddressUrl(walletAddress, chainId || 968)}
+                      href={getBotExplorerAddressUrl(walletAddress, chainId || (isMainnet ? 677 : 968))}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="rounded-lg p-1.5 hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition"
@@ -212,8 +223,8 @@ export function HeaderWallet() {
                 <div className="rounded-xl border border-outline-variant/30 bg-surface-container p-3 space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-on-surface-variant">Network</span>
-                    <span className={`font-semibold ${isTestnet ? 'text-emerald-400' : isBotChain ? 'text-cyan-400' : 'text-amber-400'}`}>
-                      {isTestnet ? 'BOT Testnet (968)' : isBotChain ? 'BOT Mainnet (677)' : `Chain ${chainId}`}
+                    <span className={`font-semibold ${isMainnet ? 'text-cyan-400' : isTestnet ? 'text-emerald-400' : isBotChain ? 'text-cyan-400' : 'text-amber-400'}`}>
+                      {isMainnet ? 'BOT Mainnet (677)' : isTestnet ? 'BOT Testnet (968)' : isBotChain ? 'BOT Chain' : `Chain ${chainId}`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
@@ -231,49 +242,90 @@ export function HeaderWallet() {
                   </div>
                 </div>
 
-                {/* Network Switching Section if not on Testnet */}
-                {!isTestnet && (
-                  <button
-                    onClick={handleSwitchToTestnet}
-                    disabled={switchingNetwork}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500/15 border border-amber-500/40 p-2 text-xs font-bold text-amber-300 hover:bg-amber-500/25 transition disabled:opacity-50"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    <span>{switchingNetwork ? 'Switching…' : 'Switch to BOT Testnet (968)'}</span>
-                  </button>
-                )}
+                {/* Network Switching Section */}
+                <div className="space-y-1.5">
+                  {!isMainnet && (
+                    <button
+                      onClick={handleSwitchToMainnet}
+                      disabled={switchingNetwork}
+                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-cyan-500/15 border border-cyan-500/40 p-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/25 transition disabled:opacity-50"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                      <span>{switchingNetwork ? 'Switching…' : 'Switch to BOT Mainnet (677)'}</span>
+                    </button>
+                  )}
+                  {!isTestnet && (
+                    <button
+                      onClick={handleSwitchToTestnet}
+                      disabled={switchingNetwork}
+                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 p-2 text-xs font-bold text-emerald-300 hover:bg-emerald-500/25 transition disabled:opacity-50"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>{switchingNetwork ? 'Switching…' : 'Switch to Bohr Testnet (968)'}</span>
+                    </button>
+                  )}
+                </div>
 
                 {/* Quick Ecosystem Links */}
                 <div className="space-y-1 pt-1 border-t border-outline-variant/20">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-mono mb-1.5">BOT Chain Ecosystem</p>
+                  
                   <a
-                    href={BOTCHAIN_TESTNET.faucetUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Coins className="h-3.5 w-3.5 text-primary" />
-                      <span>Claim Testnet tBOT</span>
-                    </span>
-                    <ExternalLink className="h-3 w-3 text-on-surface-variant" />
-                  </a>
-
-                  <a
-                    href={BOTCHAIN_TESTNET.blockExplorerUrl}
+                    href={isMainnet ? BOTCHAIN_MAINNET.blockExplorerUrl : BOTCHAIN_TESTNET.blockExplorerUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
                   >
                     <span className="flex items-center gap-2">
                       <ExternalLink className="h-3.5 w-3.5 text-secondary" />
-                      <span>BOTScan Explorer</span>
+                      <span>{isMainnet ? 'BOTScan Mainnet' : 'BOTScan Testnet'}</span>
                     </span>
                     <ExternalLink className="h-3 w-3 text-on-surface-variant" />
                   </a>
 
                   <a
-                    href={BOTCHAIN_TESTNET.boWalletUrl}
+                    href={BOTCHAIN_MAINNET.bridgeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                      <span>Official BOT Bridge</span>
+                    </span>
+                    <ExternalLink className="h-3 w-3 text-on-surface-variant" />
+                  </a>
+
+                  <a
+                    href={BOTCHAIN_MAINNET.dexUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Coins className="h-3.5 w-3.5 text-primary" />
+                      <span>BOT DEX Swap</span>
+                    </span>
+                    <ExternalLink className="h-3 w-3 text-on-surface-variant" />
+                  </a>
+
+                  {!isMainnet && BOTCHAIN_TESTNET.faucetUrl && (
+                    <a
+                      href={BOTCHAIN_TESTNET.faucetUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Coins className="h-3.5 w-3.5 text-emerald-400" />
+                        <span>Claim Testnet tBOT</span>
+                      </span>
+                      <ExternalLink className="h-3 w-3 text-on-surface-variant" />
+                    </a>
+                  )}
+
+                  <a
+                    href={BOTCHAIN_MAINNET.boWalletUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-on-surface hover:bg-surface-container-high transition"
@@ -318,7 +370,7 @@ export function HeaderWallet() {
                 <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
                   <div>
                     <h3 className="font-headline text-lg font-bold text-on-surface">Connect to BOT Chain</h3>
-                    <p className="text-xs text-on-surface-variant mt-0.5">Choose your wallet to connect to BOT Chain Testnet (Chain ID 968)</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">Supports BOT Mainnet (677) & Bohr Testnet (968)</p>
                   </div>
                   <button
                     onClick={() => setConnectModalOpen(false)}
@@ -351,7 +403,7 @@ export function HeaderWallet() {
 
                   {/* Option 2: BOT Chain Official BO Wallet */}
                   <a
-                    href={BOTCHAIN_TESTNET.boWalletUrl}
+                    href={BOTCHAIN_MAINNET.boWalletUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full flex items-center justify-between rounded-xl border border-outline-variant/30 bg-surface-container p-3.5 text-left hover:bg-surface-container-high hover:border-agent-accent transition group"
@@ -386,9 +438,12 @@ export function HeaderWallet() {
                   </div>
                 </div>
 
-                <div className="border-t border-outline-variant/20 pt-3 text-center">
-                  <p className="text-[11px] text-on-surface-variant font-mono">
-                    Chain ID: 968 · RPC: https://rpc.bohr.life · Currency: BOT
+                <div className="border-t border-outline-variant/20 pt-3 text-center space-y-1">
+                  <p className="text-[11px] text-on-surface font-mono">
+                    Mainnet: Chain 677 · RPC: https://rpc.botchain.ai
+                  </p>
+                  <p className="text-[10px] text-on-surface-variant font-mono">
+                    Testnet: Chain 968 · RPC: https://rpc.bohr.life
                   </p>
                 </div>
               </div>

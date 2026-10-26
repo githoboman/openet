@@ -65,15 +65,20 @@ export const BOTCHAIN_MAINNET: BotChainNetwork = {
   isTestnet: false,
 };
 
-export const DEFAULT_NETWORK = BOTCHAIN_TESTNET;
+const isConfiguredForMainnet =
+  process.env.NEXT_PUBLIC_BOTCHAIN_NETWORK === 'mainnet' ||
+  process.env.NEXT_PUBLIC_BOTCHAIN_CHAIN_ID === '677';
+
+export const DEFAULT_NETWORK = isConfiguredForMainnet ? BOTCHAIN_MAINNET : BOTCHAIN_TESTNET;
 
 export const SUPPORTED_NETWORKS: Record<number, BotChainNetwork> = {
   968: BOTCHAIN_TESTNET,
   677: BOTCHAIN_MAINNET,
 };
 
-export function getBotChainNetwork(chainId: number): BotChainNetwork {
-  return SUPPORTED_NETWORKS[chainId] || BOTCHAIN_TESTNET;
+export function getBotChainNetwork(chainId?: number | null): BotChainNetwork {
+  if (!chainId) return DEFAULT_NETWORK;
+  return SUPPORTED_NETWORKS[chainId] || DEFAULT_NETWORK;
 }
 
 export function isBotChain(chainId: number): boolean {
@@ -82,6 +87,10 @@ export function isBotChain(chainId: number): boolean {
 
 export function isBotChainTestnet(chainId: number): boolean {
   return chainId === 968;
+}
+
+export function isBotChainMainnet(chainId: number): boolean {
+  return chainId === 677;
 }
 
 export function getAddChainParameters(network: BotChainNetwork = BOTCHAIN_TESTNET) {
@@ -115,17 +124,17 @@ export function formatBotAmount(weiAmount: string | bigint | number, decimals: n
   }
 }
 
-export function getBotExplorerTxUrl(txHash: string, chainId: number = 968): string {
+export function getBotExplorerTxUrl(txHash: string, chainId: number = DEFAULT_NETWORK.chainId): string {
   const net = getBotChainNetwork(chainId);
   return `${net.blockExplorerUrl}/tx/${txHash}`;
 }
 
-export function getBotExplorerAddressUrl(address: string, chainId: number = 968): string {
+export function getBotExplorerAddressUrl(address: string, chainId: number = DEFAULT_NETWORK.chainId): string {
   const net = getBotChainNetwork(chainId);
   return `${net.blockExplorerUrl}/address/${address}`;
 }
 
-export function getBotExplorerBlockUrl(blockNumber: string | number, chainId: number = 968): string {
+export function getBotExplorerBlockUrl(blockNumber: string | number, chainId: number = DEFAULT_NETWORK.chainId): string {
   const net = getBotChainNetwork(chainId);
   return `${net.blockExplorerUrl}/block/${blockNumber}`;
 }

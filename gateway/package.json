@@ -11,7 +11,9 @@
     "test": "NODE_ENV=test vitest run",
     "test:statement-e2e": "tsx scripts/runStatementE2E.ts",
     "wallet:check": "node scripts/checkDeployerBalance.mjs",
-    "deploy:botchain": "node scripts/deployBotChainTestnet.mjs"
+    "wallet:check:mainnet": "node scripts/checkMainnetBalance.mjs",
+    "deploy:botchain": "node scripts/deployBotChainTestnet.mjs",
+    "deploy:botchain:mainnet": "node scripts/deployBotChainMainnet.mjs"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.11",

@@ -4,11 +4,13 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import {
   BOTCHAIN_TESTNET,
   BOTCHAIN_MAINNET,
+  DEFAULT_NETWORK,
   getBotChainNetwork,
   getAddChainParameters,
   formatBotAmount,
   isBotChain,
   isBotChainTestnet,
+  isBotChainMainnet,
 } from '@/lib/botchain';
 
 export interface PortalAuth {
@@ -19,6 +21,7 @@ export interface PortalAuth {
   chainId: number | null;
   isBotChain: boolean;
   isTestnet: boolean;
+  isMainnet: boolean;
   balance: string | null;
   balanceWei: string | null;
   networkName: string;
@@ -26,6 +29,7 @@ export interface PortalAuth {
   login: (preferredType?: 'injected' | 'privy') => Promise<void>;
   logout: () => void;
   switchToBotChainTestnet: () => Promise<boolean>;
+  switchToBotChainMainnet: () => Promise<boolean>;
   switchNetwork: (targetChainId: number) => Promise<boolean>;
   refreshBalance: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;
@@ -45,6 +49,7 @@ const defaultAuthValue: PortalAuth = {
   chainId: null,
   isBotChain: false,
   isTestnet: false,
+  isMainnet: false,
   balance: null,
   balanceWei: null,
   networkName: 'Not Connected',
@@ -52,6 +57,7 @@ const defaultAuthValue: PortalAuth = {
   login: async () => undefined,
   logout: () => undefined,
   switchToBotChainTestnet: async () => false,
+  switchToBotChainMainnet: async () => false,
   switchNetwork: async () => false,
   refreshBalance: async () => undefined,
   getAccessToken: async () => null,
@@ -118,14 +124,16 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
   const updateChainAndBalance = useCallback(async (addr: string) => {
     const ethereum = getEthereum();
     if (!ethereum) return;
+    let parsedChain: number | null = null;
     try {
       const hexChain = await ethereum.request({ method: 'eth_chainId' });
-      const parsedChain = parseInt(hexChain, 16);
+      parsedChain = parseInt(hexChain, 16);
       setChainId(parsedChain);
     } catch {
       setChainId(null);
     }
-    const rawBalance = await fetchBotNativeBalance(addr, BOTCHAIN_TESTNET.rpcUrl);
+    const targetRpc = parsedChain === BOTCHAIN_MAINNET.chainId ? BOTCHAIN_MAINNET.rpcUrl : BOTCHAIN_TESTNET.rpcUrl;
+    const rawBalance = await fetchBotNativeBalance(addr, targetRpc);
     if (rawBalance) {
       setBalanceWei(rawBalance);
     }
@@ -222,6 +230,10 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
     return switchNetwork(BOTCHAIN_TESTNET.chainId);
   };
 
+  const switchToBotChainMainnet = async (): Promise<boolean> => {
+    return switchNetwork(BOTCHAIN_MAINNET.chainId);
+  };
+
   const login = async (): Promise<void> => {
     const ethereum = getEthereum();
     if (!ethereum) {
@@ -238,7 +250,7 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
         const hexChain = await ethereum.request({ method: 'eth_chainId' });
         const curChain = parseInt(hexChain, 16);
         if (curChain !== BOTCHAIN_TESTNET.chainId && curChain !== BOTCHAIN_MAINNET.chainId) {
-          void switchToBotChainTestnet();
+          void switchNetwork(DEFAULT_NETWORK.chainId);
         }
       }
     } catch (err: any) {
@@ -256,9 +268,9 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
     const ethereum = getEthereum();
     if (!ethereum || !walletAddress) return null;
     if (chainId !== BOTCHAIN_TESTNET.chainId && chainId !== BOTCHAIN_MAINNET.chainId) {
-      const switched = await switchToBotChainTestnet();
+      const switched = await switchNetwork(DEFAULT_NETWORK.chainId);
       if (!switched) {
-        throw new Error('Please switch to BOT Chain Testnet (Chain ID 968) in your wallet to continue.');
+        throw new Error(`Please switch to BOT Chain (${DEFAULT_NETWORK.name}) in your wallet to continue.`);
       }
     }
     const txHash = await ethereum.request({
@@ -304,6 +316,7 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
 
   const isBot = chainId !== null && isBotChain(chainId);
   const isTest = chainId !== null && isBotChainTestnet(chainId);
+  const isMain = chainId !== null && isBotChainMainnet(chainId);
   const formattedBalance = balanceWei ? formatBotAmount(balanceWei) : '0';
   const networkName = chainId
     ? isBot
@@ -321,6 +334,7 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
         chainId,
         isBotChain: isBot,
         isTestnet: isTest,
+        isMainnet: isMain,
         balance: formattedBalance,
         balanceWei,
         networkName,
@@ -328,6 +342,7 @@ function InjectedPortalAuthProvider({ children }: { children: React.ReactNode })
         login,
         logout,
         switchToBotChainTestnet,
+        switchToBotChainMainnet,
         switchNetwork,
         refreshBalance,
         getAccessToken: async () => null,
