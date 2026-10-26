@@ -26,10 +26,12 @@ OpenET (Open Execution & Telemetry)
 OpenET is the first decentralized verifiable execution, cryptographic commitment, and autonomous credit layer built natively on BOT Chain. 
 
 Key Highlights:
-1. Native BOT Chain Smart Contracts Live: Deployed on Bohr Testnet (Chain ID 968) with 100% confirmation reliability (StatementCommitmentRegistry at 0xaD853e558171821372f084C87CEb5fAb4ca32E95, ReceiptAnchor at 0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE).
+1. Native BOT Chain Smart Contracts Live on Mainnet & Testnet: Deployed and verified on BOT Chain Mainnet (Chain ID 677) and Bohr Testnet (Chain ID 968) with 100% confirmation reliability:
+   - StatementCommitmentRegistry: 0xaD853e558171821372f084C87CEb5fAb4ca32E95 (Mainnet Tx: 0x79b2887b5ead5e0734999c0513922b69470faea77cf64b9f6ba902d40b273ef7)
+   - ReceiptAnchor: 0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE (Mainnet Tx: 0xee00202a41138d133c2fa3ed840c5b99628d8a7f2224ed2c83d59f2e4790f409)
 2. Autonomous AI Agent Economy: Full integration with Model Context Protocol (MCP), LangGraph, and ELIZA agent runtimes, anchoring off-chain inference and research decisions into verifiable on-chain commitments.
 3. 35% Gas Rebate Recycling Flywheel: Automatically recirculates BOT Chain ecosystem gas rebates into DEX liquidity pools and agent credit lines, transforming operational gas into permanent liquidity.
-4. Production-Ready Next.js 14 Portal: Live web dApp featuring direct browser wallet connectivity (MetaMask, Rabby, BO Wallet) with automatic chain switching to Bohr Testnet and real-time BOT balance introspection.
+4. Production-Ready Next.js 14 Portal: Live web dApp featuring direct browser wallet connectivity (MetaMask, Rabby, BO Wallet) with 1-click dual-network switching (Mainnet 677 ↔ Bohr Testnet 968) and real-time BOT balance introspection.
 5. Strict Anti-Cheating & Sybil-Resistant Design: Cryptographic proof-of-execution prevents wash trading, self-dealing, or simulated interactions by design.
 ```
 
@@ -47,8 +49,8 @@ Telegram / Discord Link: https://t.me/OpenET_Network
 ### Field 5: Current Development Stage *
 - [ ] Concept / Ideation
 - [ ] MVP
-- [x] **Testnet Live**  *(Smart contracts deployed and active on BOT Chain Bohr Testnet; portal web app fully operational)*
-- [ ] Mainnet Live
+- [ ] Testnet Live
+- [x] **Mainnet Live**  *(Smart contracts deployed and active on BOT Chain Mainnet (Chain 677) and Bohr Testnet (Chain 968); portal web app fully operational with dual-network switching)*
 
 ---
 

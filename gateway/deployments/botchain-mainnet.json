@@ -1,0 +1,18 @@
+{
+  "network": "BOT Chain Mainnet",
+  "chainId": 677,
+  "deployer": "0x080211c4Db9d3861d8Ab760245E4cA5Ca54aDA4b",
+  "contracts": {
+    "statementCommitmentRegistry": {
+      "address": "0xaD853e558171821372f084C87CEb5fAb4ca32E95",
+      "tx": "0x79b2887b5ead5e0734999c0513922b69470faea77cf64b9f6ba902d40b273ef7",
+      "explorer": "https://scan.botchain.ai/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95"
+    },
+    "receiptAnchor": {
+      "address": "0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE",
+      "tx": "0xee00202a41138d133c2fa3ed840c5b99628d8a7f2224ed2c83d59f2e4790f409",
+      "explorer": "https://scan.botchain.ai/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE"
+    }
+  },
+  "deployedAt": "2026-10-26T14:59:37.854Z"
+}

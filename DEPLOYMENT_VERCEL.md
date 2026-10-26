@@ -1,17 +1,24 @@
 # 🚀 Vercel Deployment Guide — OpenET / OpenX Portal
 
-This guide explains how to deploy the **OpenET Portal** to [Vercel](https://vercel.com) connected directly to **BOT Chain (Bohr Testnet)**.
+This guide explains how to deploy the **OpenET Portal** to [Vercel](https://vercel.com) connected directly to **BOT Chain Mainnet (Chain ID 677)** and **BOT Chain Bohr Testnet (Chain ID 968)**.
 
 ---
 
-## ⛓️ 1. Deployed Smart Contracts (BOT Chain Bohr Testnet)
+## ⛓️ 1. Live Deployed Smart Contracts
 
-The core verification and anchoring contracts are already deployed on Bohr Testnet (Chain ID `968`):
+### A. BOT Chain Mainnet (Chain ID `677`)
 
-| Contract Name | Address | Transaction | Explorer |
+| Contract Name | Mainnet Address | Deployment Tx | Explorer Link |
 |---|---|---|---|
-| **StatementCommitmentRegistry** | `0xaD853e558171821372f084C87CEb5fAb4ca32E95` | `0x046bacd23ccdc43e1efc8b2b60c1274da920e4e03329d97a3c4497d59fe71bfc` | [View on BOTScan](https://scan.bohr.life/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95) |
-| **ReceiptAnchor** | `0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE` | `0x56b66ed3b554596ff533be1d301cef2b3fd790ca6d6b772970faefb3d90bc983` | [View on BOTScan](https://scan.bohr.life/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE) |
+| **StatementCommitmentRegistry** | `0xaD853e558171821372f084C87CEb5fAb4ca32E95` | `0x79b2887b...` | [View on BOTScan Mainnet](https://scan.botchain.ai/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95) |
+| **ReceiptAnchor** | `0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE` | `0xee00202a...` | [View on BOTScan Mainnet](https://scan.botchain.ai/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE) |
+
+### B. BOT Chain Bohr Testnet (Chain ID `968`)
+
+| Contract Name | Testnet Address | Deployment Tx | Explorer Link |
+|---|---|---|---|
+| **StatementCommitmentRegistry** | `0xaD853e558171821372f084C87CEb5fAb4ca32E95` | `0x046bacd2...` | [View on BOTScan Testnet](https://scan.bohr.life/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95) |
+| **ReceiptAnchor** | `0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE` | `0x56b66ed3...` | [View on BOTScan Testnet](https://scan.bohr.life/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE) |
 
 ---
 
@@ -19,18 +26,24 @@ The core verification and anchoring contracts are already deployed on Bohr Testn
 
 ### Method A: Deploy via Vercel Web Dashboard (Recommended)
 
-1. Go to [vercel.com/new](https://vercel.com/new) and import your GitHub repository.
+1. Go to [vercel.com/new](https://vercel.com/new) and import your GitHub repository (`openet`).
 2. Under **Project Settings**:
    - **Framework Preset**: `Next.js`
-   - **Root Directory**: Click *Edit* and select `portal` (or leave default if using the root `vercel.json`).
-3. Under **Environment Variables**, add the following:
+   - **Root Directory**: `portal`
+3. Under **Environment Variables**, configure for Mainnet:
 
 ```env
-NEXT_PUBLIC_BOTCHAIN_CHAIN_ID=968
-NEXT_PUBLIC_BOTCHAIN_RPC_URL=https://rpc.bohr.life
-NEXT_PUBLIC_BOTCHAIN_EXPLORER_URL=https://scan.bohr.life
+# Network Configuration (BOT Chain Mainnet)
+NEXT_PUBLIC_BOTCHAIN_NETWORK=mainnet
+NEXT_PUBLIC_BOTCHAIN_CHAIN_ID=677
+NEXT_PUBLIC_BOTCHAIN_RPC_URL=https://rpc.botchain.ai
+NEXT_PUBLIC_BOTCHAIN_EXPLORER_URL=https://scan.botchain.ai
+
+# Smart Contract Addresses
 NEXT_PUBLIC_STATEMENT_COMMITMENT_REGISTRY=0xaD853e558171821372f084C87CEb5fAb4ca32E95
 NEXT_PUBLIC_RECEIPT_ANCHOR_CONTRACT=0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE
+
+# Gateway Endpoints
 OPENX_GATEWAY_URL=https://your-gateway-host.com
 NEXT_PUBLIC_OPENX_GATEWAY_URL=https://your-gateway-host.com
 ```

@@ -1,10 +1,23 @@
-# 📜 Live On-Chain Interaction Records — BOT Chain (Bohr Testnet)
+# 📜 Live On-Chain Interaction Records — BOT Chain (Mainnet & Testnet)
 
-These records represent **live, verified on-chain transactions** executed on **BOT Chain Bohr Testnet (Chain ID 968)**. They demonstrate the real-world cryptographic lifecycle of autonomous AI agents utilizing **OpenET** smart contracts for verifiable audit commitments and execution receipt anchors.
+These records represent **live, verified on-chain deployments and transactions** executed on **BOT Chain Mainnet (Chain ID 677)** and **BOT Chain Bohr Testnet (Chain ID 968)**. They demonstrate the real-world cryptographic lifecycle of autonomous AI agents utilizing **OpenET** smart contracts for verifiable audit commitments and execution receipt anchors.
 
 ---
 
-## 📊 Summary of On-Chain Activity
+## 🌐 BOT Chain Mainnet Deployments (Chain ID 677)
+
+| Contract Name | Mainnet Address | Deployment Transaction | Block Number | Gas Used | Explorer Link |
+|---|---|---|---|---|---|
+| **StatementCommitmentRegistry** | `0xaD853e558171821372f084C87CEb5fAb4ca32E95` | `0x79b2887b5ead5e0734999c0513922b69470faea77cf64b9f6ba902d40b273ef7` | `28056441` | `150,661` | [View on BOTScan Mainnet](https://scan.botchain.ai/address/0xaD853e558171821372f084C87CEb5fAb4ca32E95) |
+| **ReceiptAnchor** | `0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE` | `0xee00202a41138d133c2fa3ed840c5b99628d8a7f2224ed2c83d59f2e4790f409` | `28056449` | `172,983` | [View on BOTScan Mainnet](https://scan.botchain.ai/address/0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE) |
+
+- **Mainnet Deployer Address:** [`0x080211c4Db9d3861d8Ab760245E4cA5Ca54aDA4b`](https://scan.botchain.ai/address/0x080211c4Db9d3861d8Ab760245E4cA5Ca54aDA4b)
+- **Mainnet RPC Endpoint:** `https://rpc.botchain.ai`
+- **Mainnet Status:** **100% Deployed, Confirmed, and Operational**
+
+---
+
+## 📊 Summary of On-Chain Activity (Bohr Testnet)
 
 - **Network:** BOT Chain Testnet (Bohr)
 - **Chain ID:** `968` (`0x3c8`)

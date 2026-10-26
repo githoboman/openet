@@ -88,9 +88,9 @@ NEXT_PUBLIC_BOTCHAIN_CHAIN_ID=677
 NEXT_PUBLIC_BOTCHAIN_RPC_URL=https://rpc.botchain.ai
 NEXT_PUBLIC_BOTCHAIN_EXPLORER_URL=https://scan.botchain.ai
 
-# Smart Contract Addresses (from gateway/deployments/botchain-mainnet.json)
-NEXT_PUBLIC_STATEMENT_COMMITMENT_REGISTRY=<DEPLOYED_MAINNET_REGISTRY_ADDRESS>
-NEXT_PUBLIC_RECEIPT_ANCHOR_CONTRACT=<DEPLOYED_MAINNET_ANCHOR_ADDRESS>
+# Smart Contract Addresses (Deployed on Chain 677)
+NEXT_PUBLIC_STATEMENT_COMMITMENT_REGISTRY=0xaD853e558171821372f084C87CEb5fAb4ca32E95
+NEXT_PUBLIC_RECEIPT_ANCHOR_CONTRACT=0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE
 
 # Gateway Endpoints
 OPENX_GATEWAY_URL=https://your-production-gateway.com
@@ -119,10 +119,11 @@ The OpenET Portal seamlessly supports both networks without re-deploying code:
 - [x] Chain ID `677` verified against `https://rpc.botchain.ai`
 - [x] Automated balance checker created: `npm run wallet:check:mainnet`
 - [x] Automated deployment pipeline created: `npm run deploy:botchain:mainnet`
-- [x] Deployment manifest structure created for `gateway/deployments/botchain-mainnet.json`
+- [x] Deployer funded with 0.05 BOT
+- [x] `StatementCommitmentRegistry` deployed at `0xaD853e558171821372f084C87CEb5fAb4ca32E95` (Block `28056441`, Tx `0x79b2887b...`)
+- [x] `ReceiptAnchor` deployed at `0xEB09EE90BC8803AFA8CA068F4bf6f51F95b203fE` (Block `28056449`, Tx `0xee00202a...`)
+- [x] Deployment manifest saved to `gateway/deployments/botchain-mainnet.json`
 - [x] Portal network library configured for dynamic Mainnet/Testnet resolution
 - [x] Portal UI upgraded with 1-click Mainnet & Testnet switching
 - [x] Next.js production build verified passing
-- [ ] Fund Deployer (`0x080211c4Db9d3861d8Ab760245E4cA5Ca54aDA4b`) with $\ge 0.05$ BOT
-- [ ] Run `npm run deploy:botchain:mainnet`
-- [ ] Populate Vercel production environment variables and deploy
+- [ ] Populate Vercel production environment variables and deploy portal
