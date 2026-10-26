@@ -12,6 +12,7 @@
     "test:statement-e2e": "tsx scripts/runStatementE2E.ts",
     "wallet:check": "node scripts/checkDeployerBalance.mjs",
     "wallet:check:mainnet": "node scripts/checkMainnetBalance.mjs",
+    "wallet:sweep:mainnet": "node scripts/sweepRemainingBot.mjs",
     "deploy:botchain": "node scripts/deployBotChainTestnet.mjs",
     "deploy:botchain:mainnet": "node scripts/deployBotChainMainnet.mjs"
   },
